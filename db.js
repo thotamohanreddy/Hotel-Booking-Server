@@ -58,10 +58,6 @@ connection.on("connected", () => {
     .catch((error) => {
       console.error("Error inserting user documents:", error);
     })
-    .finally(() => {
-      // Close the MongoDB connection
-      connection.close();
-    });
 });
 
 module.exports = mongoose;
