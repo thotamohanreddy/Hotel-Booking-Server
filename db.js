@@ -3,9 +3,11 @@ const fs = require("fs");
 const path = require("path");
 
 // PLEASE EDIT YOUR MONGODB CONNECTION STRING HERE
-const mongoURL = process.env.MONGODB_URL;
+const mongodbUser = process.env.MONGODB_USER;
+const mongodbPassword = process.env.MONGODB_PASSWORD;
+const mongodbCluster = process.env.MONGODB_CLUSTER;
 
-mongoose.connect("mongodb+srv://thotamohanreddy993:mohan123@hotelbookingcluster.nyya41y.mongodb.net/?retryWrites=true&w=majority", {
+mongoose.connect(`mongodb+srv://${mongodbUser}:${mongodbPassword}@${mongodbCluster}.nyya41y.mongodb.net/?retryWrites=true&w=majority`, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
