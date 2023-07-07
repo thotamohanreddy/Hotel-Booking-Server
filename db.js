@@ -3,10 +3,9 @@ const fs = require("fs");
 const path = require("path");
 
 // PLEASE EDIT YOUR MONGODB CONNECTION STRING HERE
-/* YOU CAN FIND SAMPLE COLLECTION at mongodb_collections folder */
 const mongoURL = process.env.MONGODB_URL;
 
-mongoose.connect(mongoURL, {
+mongoose.connect("mongodb+srv://thotamohanreddy993:mohan123@hotelbookingcluster.nyya41y.mongodb.net/?retryWrites=true&w=majority", {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
@@ -21,16 +20,21 @@ connection.on("connected", () => {
   console.log("Mongo DB Connection Successful");
 
   // Read the JSON data for rooms
-  const roomsFilePath = path.join(__dirname, "../mongodb_collections/rooms.json");
+  const roomsFilePath = path.join(__dirname, "./mongodb_collections/rooms.json");
   const roomsData = JSON.parse(fs.readFileSync(roomsFilePath));
 
   // Read the JSON data for users
-  const usersFilePath = path.join(__dirname, "../mongodb_collections/users.json");
+  const usersFilePath = path.join(__dirname, "./mongodb_collections/users.json");
   const usersData = JSON.parse(fs.readFileSync(usersFilePath));
 
-  // Insert data into the rooms collection
+  // Clear existing data from the rooms collection
   const RoomModel = require("./models/room"); // Replace with your actual room model
-  RoomModel.insertMany(roomsData)
+  RoomModel.deleteMany({})
+    .then(() => {
+      console.log("Existing room documents cleared");
+      // Insert data into the rooms collection
+      return RoomModel.insertMany(roomsData);
+    })
     .then((result) => {
       console.log(`${result.length} room documents inserted into the collection`);
     })
@@ -38,9 +42,14 @@ connection.on("connected", () => {
       console.error("Error inserting room documents:", error);
     });
 
-  // Insert data into the users collection
+  // Clear existing data from the users collection
   const UserModel = require("./models/user"); // Replace with your actual user model
-  UserModel.insertMany(usersData)
+  UserModel.deleteMany({})
+    .then(() => {
+      console.log("Existing user documents cleared");
+      // Insert data into the users collection
+      return UserModel.insertMany(usersData);
+    })
     .then((result) => {
       console.log(`${result.length} user documents inserted into the collection`);
     })
@@ -54,3 +63,4 @@ connection.on("connected", () => {
 });
 
 module.exports = mongoose;
+
